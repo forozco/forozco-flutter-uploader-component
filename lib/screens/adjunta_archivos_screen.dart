@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../widgets/bottom_nav_bar.dart';
+import '../widgets/adaptive_app_bar.dart';
+import '../widgets/adaptive_bottom_nav.dart';
+import '../widgets/adaptive_button.dart';
+import '../widgets/adaptive_dialog.dart';
 import '../widgets/file_uploader_card.dart';
 
 class AdjuntaArchivosScreen extends StatefulWidget {
@@ -16,131 +21,177 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundGray,
-      appBar: AppBar(
+    return Platform.isIOS ? _buildCupertinoScreen() : _buildMaterialScreen();
+  }
+
+  Widget _buildCupertinoScreen() {
+    return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.systemGroupedBackground,
+      navigationBar: CupertinoNavigationBar(
         backgroundColor: AppColors.primaryPurple,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: AppColors.white, size: 32),
+        border: null,
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
           onPressed: () => Navigator.of(context).maybePop(),
+          child: const Icon(
+            CupertinoIcons.back,
+            color: AppColors.white,
+          ),
         ),
-        title: const Text(
+        middle: const Text(
           'Adjunta tus archivos',
           style: TextStyle(
             color: AppColors.white,
-            fontSize: 18,
+            fontSize: 17,
             fontWeight: FontWeight.w600,
           ),
         ),
-        elevation: 0,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  FileUploaderCard(
-                    title: 'Comprobante de domicilio',
-                    subtitle: 'Dato obligatorio*',
-                    description: 'Adjunta tu comprobante, verifica que:',
-                    requirements: const [
-                      'No sea mayor a 3 meses',
-                      'Sea legible',
-                      'Coincida con la información registrada',
-                    ],
-                    onFilesChanged: (files) {
-                      setState(() {
-                        _uploadedFiles = files;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _handleSiguiente,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryPink,
-                        foregroundColor: AppColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        FileUploaderCard(
+                          title: 'Comprobante de domicilio',
+                          subtitle: 'Dato obligatorio*',
+                          description: 'Adjunta tu comprobante, verifica que:',
+                          requirements: const [
+                            'No sea mayor a 3 meses',
+                            'Sea legible',
+                            'Coincida con la información registrada',
+                          ],
+                          onFilesChanged: (files) {
+                            setState(() {
+                              _uploadedFiles = files;
+                            });
+                          },
                         ),
-                      ),
-                      child: const Text(
-                        'Siguiente',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(height: 20),
+                        AdaptivePrimaryButton(
+                          text: 'Siguiente',
+                          onPressed: _handleSiguiente,
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        AdaptiveSecondaryButton(
+                          text: 'Cancelar',
+                          onPressed: _handleCancela,
+                        ),
+                        const SizedBox(height: 16),
+                      ]),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: TextButton(
-                      onPressed: _handleCancela,
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.lightPink,
-                        foregroundColor: AppColors.textDark,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancelar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
-          ),
-          BottomNavBar(
-            currentIndex: _currentNavIndex,
-            onTap: (index) {
-              setState(() {
-                _currentNavIndex = index;
-              });
-            },
-          ),
-        ],
+            AdaptiveBottomNav(
+              currentIndex: _currentNavIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentNavIndex = index;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMaterialScreen() {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundGray,
+      appBar: AdaptiveAppBar(
+        title: 'Adjunta tus archivos',
+        onBack: () => Navigator.of(context).maybePop(),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    FileUploaderCard(
+                      title: 'Comprobante de domicilio',
+                      subtitle: 'Dato obligatorio*',
+                      description: 'Adjunta tu comprobante, verifica que:',
+                      requirements: const [
+                        'No sea mayor a 3 meses',
+                        'Sea legible',
+                        'Coincida con la información registrada',
+                      ],
+                      onFilesChanged: (files) {
+                        setState(() {
+                          _uploadedFiles = files;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    AdaptivePrimaryButton(
+                      text: 'Siguiente',
+                      onPressed: _handleSiguiente,
+                    ),
+                    const SizedBox(height: 12),
+                    AdaptiveSecondaryButton(
+                      text: 'Cancelar',
+                      onPressed: _handleCancela,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+            AdaptiveBottomNav(
+              currentIndex: _currentNavIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentNavIndex = index;
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
   void _handleSiguiente() {
-    // Aquí tienes acceso a todos los archivos subidos
     if (_uploadedFiles.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor adjunta al menos un archivo')),
+      AdaptiveDialog.showMessage(
+        context: context,
+        title: 'Archivos requeridos',
+        message: 'Por favor adjunta al menos un archivo para continuar.',
       );
       return;
     }
 
-    // Ejemplo: mostrar los archivos seleccionados
     final fileNames = _uploadedFiles.map((f) => f.name).join(', ');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Archivos: $fileNames')),
+    AdaptiveDialog.showMessage(
+      context: context,
+      title: 'Archivos adjuntados',
+      message: 'Archivos: $fileNames',
     );
-
-    // Aquí puedes navegar a la siguiente pantalla pasando los archivos
-    // Navigator.push(context, MaterialPageRoute(
-    //   builder: (context) => NextScreen(files: _uploadedFiles),
-    // ));
   }
 
-  void _handleCancela() {
-    // Cancel and go back
-    Navigator.of(context).maybePop();
+  void _handleCancela() async {
+    final confirmed = await AdaptiveDialog.showConfirmation(
+      context: context,
+      title: 'Cancelar registro',
+      message: '¿Estás seguro de que deseas cancelar? Se perderán los archivos adjuntados.',
+      confirmText: 'Sí, cancelar',
+      cancelText: 'No, continuar',
+      isDestructive: true,
+    );
+
+    if (confirmed == true && mounted) {
+      Navigator.of(context).maybePop();
+    }
   }
 }
