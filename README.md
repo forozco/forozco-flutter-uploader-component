@@ -1,7 +1,5 @@
 # FileUploaderCard
 
-Componente reutilizable de Flutter para la carga de archivos con interfaz de arrastrar y soltar.
-
 ## Descripcion
 
 `FileUploaderCard` es un widget que proporciona una interfaz completa para la seleccion y gestion de archivos. Incluye una zona de carga con borde punteado, visualizacion de archivos seleccionados y opciones de configuracion flexibles.
