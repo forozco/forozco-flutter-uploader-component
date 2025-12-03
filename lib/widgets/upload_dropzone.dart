@@ -4,10 +4,14 @@ import '../theme/app_theme.dart';
 
 class UploadDropzone extends StatelessWidget {
   final VoidCallback? onTap;
+  final int maxFileSizeMB;
+  final List<String> allowedExtensions;
 
   const UploadDropzone({
     super.key,
     this.onTap,
+    this.maxFileSizeMB = 5,
+    this.allowedExtensions = const ['jpg', 'jpeg', 'png', 'gif', 'pdf'],
   });
 
   @override
@@ -55,7 +59,7 @@ class UploadDropzone extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Tamaño máximo por archivo: 5MB',
+                'Tamaño máximo por archivo: ${maxFileSizeMB}MB',
                 style: TextStyle(
                   color: AppColors.textGray,
                   fontSize: 12,
@@ -63,7 +67,7 @@ class UploadDropzone extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Tipo de archivos permitidos: JPG, PNG, GIF, PDF',
+                'Tipo de archivos permitidos: ${allowedExtensions.map((e) => e.toUpperCase()).join(', ')}',
                 style: TextStyle(
                   color: AppColors.textGray,
                   fontSize: 12,
