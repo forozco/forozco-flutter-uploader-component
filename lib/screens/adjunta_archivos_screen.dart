@@ -167,12 +167,14 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
   // ==================== Android Native UI ====================
   Widget _buildAndroidScreen() {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
+        // En dark mode usar surface con elevación, en light mode el primary
+        backgroundColor: isDark ? colorScheme.surfaceContainer : colorScheme.primary,
+        foregroundColor: isDark ? colorScheme.onSurface : colorScheme.onPrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -180,14 +182,15 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
             Navigator.of(context).maybePop();
           },
         ),
-        title: const Text(
+        title: Text(
           'Adjunta tus archivos',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
+            color: isDark ? colorScheme.onSurface : colorScheme.onPrimary,
           ),
         ),
-        elevation: 0,
+        elevation: isDark ? 0 : 0,
         scrolledUnderElevation: 2,
       ),
       body: SafeArea(
@@ -232,6 +235,10 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                       height: 56,
                       child: FilledButton(
                         onPressed: _handleSiguiente,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          foregroundColor: colorScheme.onPrimary,
+                        ),
                         child: const Text(
                           'Siguiente',
                           style: TextStyle(
@@ -248,6 +255,13 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                       height: 56,
                       child: OutlinedButton(
                         onPressed: _handleCancela,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: colorScheme.onSurface,
+                          side: BorderSide(
+                            color: colorScheme.outline,
+                            width: 1,
+                          ),
+                        ),
                         child: const Text(
                           'Cancelar',
                           style: TextStyle(
