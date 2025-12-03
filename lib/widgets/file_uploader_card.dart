@@ -1,6 +1,8 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import '../theme/app_theme.dart';
+import 'package:flutter/services.dart';
 import 'upload_dropzone.dart';
 import 'file_upload_item.dart';
 
@@ -99,6 +101,14 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isIOS) {
+      return _buildIOSCard(context);
+    }
+    return _buildAndroidCard(context);
+  }
+
+  // ==================== iOS Native UI ====================
+  Widget _buildIOSCard(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -107,18 +117,19 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
           Text(
             widget.title,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
+              color: CupertinoColors.black,
+              letterSpacing: -0.5,
             ),
           ),
           if (widget.subtitle != null) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               widget.subtitle!,
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.textGray,
+              style: TextStyle(
+                fontSize: 15,
+                color: CupertinoColors.systemGrey,
               ),
             ),
           ],
@@ -127,22 +138,22 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
             Text(
               widget.description!,
               style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.textDark,
+                fontSize: 15,
+                color: CupertinoColors.black,
               ),
             ),
           ],
           if (widget.requirements != null && widget.requirements!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            ...widget.requirements!.map((req) => _buildBulletPoint(req)),
+            ...widget.requirements!.map((req) => _buildIOSBulletPoint(req)),
           ],
           const SizedBox(height: 24),
           Text(
             widget.uploadSectionTitle,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
-              color: AppColors.textDark,
+              color: CupertinoColors.black,
             ),
           ),
           const SizedBox(height: 12),
@@ -166,18 +177,18 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
     );
   }
 
-  Widget _buildBulletPoint(String text) {
+  Widget _buildIOSBulletPoint(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 6, right: 8),
-            width: 6,
-            height: 6,
-            decoration: const BoxDecoration(
-              color: AppColors.textDark,
+            margin: const EdgeInsets.only(top: 7, right: 10),
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(
+              color: CupertinoColors.systemGrey,
               shape: BoxShape.circle,
             ),
           ),
@@ -185,9 +196,108 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
             child: Text(
               text,
               style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.textDark,
-                fontWeight: FontWeight.w500,
+                fontSize: 15,
+                color: CupertinoColors.black,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==================== Android Native UI ====================
+  Widget _buildAndroidCard(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.title,
+            style: textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          if (widget.subtitle != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              widget.subtitle!,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+          if (widget.description != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              widget.description!,
+              style: textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ],
+          if (widget.requirements != null && widget.requirements!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            ...widget.requirements!.map((req) => _buildAndroidBulletPoint(context, req)),
+          ],
+          const SizedBox(height: 24),
+          Text(
+            widget.uploadSectionTitle,
+            style: textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 12),
+          UploadDropzone(
+            onTap: _handleFileSelection,
+            maxFileSizeMB: widget.maxFileSizeMB,
+            allowedExtensions: widget.allowedExtensions,
+          ),
+          if (_uploadedFiles.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            ..._uploadedFiles.map((file) => FileUploadItem(
+              fileName: file.name,
+              fileSize: file.size,
+              progress: file.progress,
+              isUploading: file.isUploading,
+              onRemove: () => _removeFile(file),
+            )),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAndroidBulletPoint(BuildContext context, String text) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 8, right: 12),
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant,
+              shape: BoxShape.circle,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurface,
               ),
             ),
           ),
@@ -197,6 +307,7 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
   }
 
   Future<void> _handleFileSelection() async {
+    HapticFeedback.selectionClick();
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.any,
@@ -218,12 +329,37 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
             ));
           }
         });
+        HapticFeedback.lightImpact();
         widget.onFilesChanged?.call(_uploadedFiles);
       }
     } catch (e) {
       if (!mounted) return;
+      _showError('Error al seleccionar archivo: $e');
+    }
+  }
+
+  void _showError(String message) {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al seleccionar archivo: $e')),
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
     }
   }
