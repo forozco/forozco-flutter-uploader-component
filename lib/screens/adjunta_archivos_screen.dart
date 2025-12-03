@@ -12,6 +12,7 @@ class AdjuntaArchivosScreen extends StatefulWidget {
 
 class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
   int _currentNavIndex = 2;
+  List<UploadedFile> _uploadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,9 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                       'Coincida con la información registrada',
                     ],
                     onFilesChanged: (files) {
-                      // Handle file changes here if needed
+                      setState(() {
+                        _uploadedFiles = files;
+                      });
                     },
                   ),
                   const SizedBox(height: 16),
@@ -116,10 +119,24 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
   }
 
   void _handleSiguiente() {
-    // Navigate to next screen
+    // Aquí tienes acceso a todos los archivos subidos
+    if (_uploadedFiles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor adjunta al menos un archivo')),
+      );
+      return;
+    }
+
+    // Ejemplo: mostrar los archivos seleccionados
+    final fileNames = _uploadedFiles.map((f) => f.name).join(', ');
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Continuando al siguiente paso...')),
+      SnackBar(content: Text('Archivos: $fileNames')),
     );
+
+    // Aquí puedes navegar a la siguiente pantalla pasando los archivos
+    // Navigator.push(context, MaterialPageRoute(
+    //   builder: (context) => NextScreen(files: _uploadedFiles),
+    // ));
   }
 
   void _handleCancela() {
