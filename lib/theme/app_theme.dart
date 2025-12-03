@@ -13,12 +13,15 @@ class AppColors {
 }
 
 class AppTheme {
-  static ThemeData get theme {
+  // Tema claro
+  static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primaryPurple,
         primary: AppColors.primaryPurple,
+        brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: AppColors.backgroundGray,
       appBarTheme: const AppBarTheme(
@@ -50,4 +53,44 @@ class AppTheme {
       ),
     );
   }
+
+  // Tema oscuro
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primaryPurple,
+        primary: AppColors.primaryPurple,
+        brightness: Brightness.dark,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.primaryPurple,
+        foregroundColor: AppColors.white,
+        elevation: 0,
+        centerTitle: false,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryPink,
+          foregroundColor: AppColors.white,
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Mantener compatibilidad con código existente
+  static ThemeData get theme => lightTheme;
 }
