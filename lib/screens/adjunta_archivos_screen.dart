@@ -153,10 +153,13 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
 
   // ==================== Android Native UI ====================
   Widget _buildAndroidScreen() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryPurple,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -171,7 +174,8 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        elevation: 2,
+        elevation: 0,
+        scrolledUnderElevation: 2,
       ),
       body: SafeArea(
         child: Column(
@@ -181,11 +185,16 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // Card Material
+                    // Card Material 3
                     Card(
-                      elevation: 1,
+                      elevation: 0,
+                      color: colorScheme.surface,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(
+                          color: colorScheme.outlineVariant,
+                          width: 1,
+                        ),
                       ),
                       child: FileUploaderCard(
                         title: 'Comprobante de domicilio',
@@ -203,16 +212,13 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
                     // Botón primario Material 3
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 56,
                       child: FilledButton(
                         onPressed: _handleSiguiente,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.primaryPink,
-                        ),
                         child: const Text(
                           'Siguiente',
                           style: TextStyle(
@@ -226,13 +232,9 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                     // Botón secundario Material 3
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
-                      child: FilledButton.tonal(
+                      height: 56,
+                      child: OutlinedButton(
                         onPressed: _handleCancela,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.lightPink,
-                          foregroundColor: AppColors.textDark,
-                        ),
                         child: const Text(
                           'Cancelar',
                           style: TextStyle(
