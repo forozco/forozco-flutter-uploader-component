@@ -29,7 +29,7 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: AppColors.primaryPurple,
+        backgroundColor: CupertinoColors.systemBlue,
         border: null,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -58,11 +58,11 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // Card con estilo iOS
+                    // Card con estilo iOS grouped
                     Container(
                       decoration: BoxDecoration(
-                        color: CupertinoColors.white,
-                        borderRadius: BorderRadius.circular(10),
+                        color: CupertinoColors.systemBackground,
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: FileUploaderCard(
                         title: 'Comprobante de domicilio',
@@ -80,32 +80,39 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    // Botón primario iOS
+                    const SizedBox(height: 24),
+                    // Botón primario iOS - estilo sistema
                     SizedBox(
                       width: double.infinity,
-                      child: CupertinoButton.filled(
+                      height: 50,
+                      child: CupertinoButton(
+                        color: CupertinoColors.systemBlue,
+                        borderRadius: BorderRadius.circular(12),
                         onPressed: _handleSiguiente,
                         child: const Text(
                           'Siguiente',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
+                            fontSize: 17,
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // Botón secundario iOS
+                    // Botón secundario iOS - estilo texto
                     SizedBox(
                       width: double.infinity,
+                      height: 50,
                       child: CupertinoButton(
-                        color: AppColors.lightPink,
+                        color: CupertinoColors.systemGrey5,
+                        borderRadius: BorderRadius.circular(12),
                         onPressed: _handleCancela,
-                        child: const Text(
+                        child: Text(
                           'Cancelar',
                           style: TextStyle(
-                            color: AppColors.textDark,
+                            color: CupertinoColors.label,
                             fontWeight: FontWeight.w600,
+                            fontSize: 17,
                           ),
                         ),
                       ),
@@ -118,7 +125,7 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
             // Tab Bar iOS nativo
             CupertinoTabBar(
               currentIndex: _currentNavIndex,
-              activeColor: AppColors.primaryPurple,
+              activeColor: CupertinoColors.systemBlue,
               inactiveColor: CupertinoColors.systemGrey,
               onTap: (index) {
                 HapticFeedback.selectionClick();

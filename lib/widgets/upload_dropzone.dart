@@ -24,51 +24,87 @@ class UploadDropzone extends StatelessWidget {
   }
 
   Widget _buildIOSDropzone(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CupertinoColors.systemGrey4,
-          width: 1,
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap?.call();
+      },
+      child: DottedBorder(
+        borderRadius: BorderRadius.circular(12),
+        color: CupertinoColors.systemGrey3,
+        strokeWidth: 1.5,
+        dashPattern: const [6, 4],
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          decoration: BoxDecoration(
+            color: CupertinoColors.systemGrey6.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: CupertinoColors.systemGrey5,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  CupertinoIcons.cloud_upload,
+                  size: 32,
+                  color: CupertinoColors.systemGrey,
+                ),
+              ),
+              const SizedBox(height: 20),
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                color: CupertinoColors.systemGrey5,
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  onTap?.call();
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      CupertinoIcons.folder,
+                      size: 18,
+                      color: CupertinoColors.label,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Seleccionar archivo',
+                      style: TextStyle(
+                        color: CupertinoColors.label,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Máximo ${maxFileSizeMB}MB',
+                style: TextStyle(
+                  color: CupertinoColors.secondaryLabel,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                allowedExtensions.map((e) => e.toUpperCase()).join(', '),
+                style: TextStyle(
+                  color: CupertinoColors.tertiaryLabel,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            CupertinoIcons.cloud_upload,
-            size: 48,
-            color: CupertinoColors.systemGrey,
-          ),
-          const SizedBox(height: 16),
-          CupertinoButton.filled(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              onTap?.call();
-            },
-            child: const Text('Seleccionar archivo'),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Máximo ${maxFileSizeMB}MB',
-            style: TextStyle(
-              color: CupertinoColors.systemGrey,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            allowedExtensions.map((e) => e.toUpperCase()).join(', '),
-            style: TextStyle(
-              color: CupertinoColors.systemGrey,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ),
     );
   }
