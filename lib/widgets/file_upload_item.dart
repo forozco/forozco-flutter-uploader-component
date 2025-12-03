@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../theme/app_theme.dart';
 
 class FileUploadItem extends StatelessWidget {
   final String fileName;
@@ -29,6 +28,16 @@ class FileUploadItem extends StatelessWidget {
   }
 
   Widget _buildIOSItem(BuildContext context) {
+    // Colores que se adaptan a dark mode
+    final isDark = CupertinoTheme.brightnessOf(context) == Brightness.dark;
+    final backgroundColor = isDark
+        ? CupertinoColors.systemGrey6.darkColor
+        : CupertinoColors.systemBackground;
+    final iconBackgroundColor = CupertinoColors.systemGrey5.resolveFrom(context);
+    final labelColor = CupertinoColors.label.resolveFrom(context);
+    final secondaryLabelColor = CupertinoColors.secondaryLabel.resolveFrom(context);
+    final separatorColor = CupertinoColors.separator.resolveFrom(context);
+
     return Dismissible(
       key: Key(fileName),
       direction: DismissDirection.endToStart,
@@ -43,7 +52,7 @@ class FileUploadItem extends StatelessWidget {
       background: Container(
         margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: CupertinoColors.destructiveRed,
+          color: CupertinoColors.systemRed.resolveFrom(context),
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.centerRight,
@@ -58,10 +67,10 @@ class FileUploadItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: CupertinoColors.white,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: CupertinoColors.systemGrey5,
+            color: separatorColor,
             width: 0.5,
           ),
         ),
@@ -71,7 +80,7 @@ class FileUploadItem extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: CupertinoColors.systemGrey6,
+                color: iconBackgroundColor,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -79,7 +88,7 @@ class FileUploadItem extends StatelessWidget {
                     ? const CupertinoActivityIndicator()
                     : Icon(
                         _getIOSFileIcon(),
-                        color: AppColors.primaryPurple,
+                        color: CupertinoColors.systemBlue.resolveFrom(context),
                         size: 22,
                       ),
               ),
@@ -91,10 +100,10 @@ class FileUploadItem extends StatelessWidget {
                 children: [
                   Text(
                     fileName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: CupertinoColors.black,
+                      color: labelColor,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -106,14 +115,14 @@ class FileUploadItem extends StatelessWidget {
                         fileSize,
                         style: TextStyle(
                           fontSize: 13,
-                          color: CupertinoColors.systemGrey,
+                          color: secondaryLabelColor,
                         ),
                       ),
                       if (!isUploading) ...[
                         const SizedBox(width: 8),
                         Icon(
                           CupertinoIcons.checkmark_circle_fill,
-                          color: CupertinoColors.activeGreen,
+                          color: CupertinoColors.systemGreen.resolveFrom(context),
                           size: 14,
                         ),
                         const SizedBox(width: 4),
@@ -121,7 +130,7 @@ class FileUploadItem extends StatelessWidget {
                           'Completado',
                           style: TextStyle(
                             fontSize: 13,
-                            color: CupertinoColors.activeGreen,
+                            color: CupertinoColors.systemGreen.resolveFrom(context),
                           ),
                         ),
                       ],
@@ -133,9 +142,9 @@ class FileUploadItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(2),
                       child: LinearProgressIndicator(
                         value: progress,
-                        backgroundColor: CupertinoColors.systemGrey5,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppColors.primaryPurple,
+                        backgroundColor: CupertinoColors.systemGrey4.resolveFrom(context),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          CupertinoColors.systemBlue.resolveFrom(context),
                         ),
                         minHeight: 3,
                       ),
@@ -154,7 +163,7 @@ class FileUploadItem extends StatelessWidget {
               },
               child: Icon(
                 CupertinoIcons.xmark_circle_fill,
-                color: CupertinoColors.systemGrey3,
+                color: CupertinoColors.systemGrey3.resolveFrom(context),
                 size: 22,
               ),
             ),
@@ -165,6 +174,9 @@ class FileUploadItem extends StatelessWidget {
   }
 
   Widget _buildAndroidItem(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Dismissible(
       key: Key(fileName),
       direction: DismissDirection.endToStart,
@@ -179,24 +191,25 @@ class FileUploadItem extends StatelessWidget {
       background: Container(
         margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: colorScheme.error,
           borderRadius: BorderRadius.circular(12),
         ),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        child: const Icon(
+        child: Icon(
           Icons.delete_outline,
-          color: Colors.white,
+          color: colorScheme.onError,
           size: 24,
         ),
       ),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 6),
         elevation: 0,
+        color: colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: Colors.grey.shade300,
+            color: colorScheme.outlineVariant,
             width: 1,
           ),
         ),
@@ -208,7 +221,7 @@ class FileUploadItem extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -219,13 +232,13 @@ class FileUploadItem extends StatelessWidget {
                           child: CircularProgressIndicator(
                             strokeWidth: 2.5,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.primary,
+                              colorScheme.primary,
                             ),
                           ),
                         )
                       : Icon(
                           _getAndroidFileIcon(),
-                          color: Theme.of(context).colorScheme.primary,
+                          color: colorScheme.primary,
                           size: 24,
                         ),
                 ),
@@ -237,8 +250,9 @@ class FileUploadItem extends StatelessWidget {
                   children: [
                     Text(
                       fileName,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
+                        color: colorScheme.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -248,8 +262,8 @@ class FileUploadItem extends StatelessWidget {
                       children: [
                         Text(
                           fileSize,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade600,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                         if (!isUploading) ...[
@@ -262,7 +276,7 @@ class FileUploadItem extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text(
                             'Completado',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: textTheme.bodySmall?.copyWith(
                               color: Colors.green,
                             ),
                           ),
@@ -275,7 +289,7 @@ class FileUploadItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
                           value: progress,
-                          backgroundColor: Colors.grey.shade200,
+                          backgroundColor: colorScheme.surfaceContainerHighest,
                           minHeight: 4,
                         ),
                       ),
@@ -291,7 +305,7 @@ class FileUploadItem extends StatelessWidget {
                 },
                 icon: Icon(
                   Icons.cancel,
-                  color: Colors.grey.shade400,
+                  color: colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
                 style: IconButton.styleFrom(

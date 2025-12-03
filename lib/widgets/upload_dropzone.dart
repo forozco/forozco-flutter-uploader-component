@@ -24,6 +24,15 @@ class UploadDropzone extends StatelessWidget {
   }
 
   Widget _buildIOSDropzone(BuildContext context) {
+    // Colores adaptativos para dark mode
+    final borderColor = CupertinoColors.systemGrey3.resolveFrom(context);
+    final backgroundColor = CupertinoColors.systemGrey6.resolveFrom(context).withOpacity(0.5);
+    final iconContainerColor = CupertinoColors.systemGrey5.resolveFrom(context);
+    final iconColor = CupertinoColors.systemGrey.resolveFrom(context);
+    final labelColor = CupertinoColors.label.resolveFrom(context);
+    final secondaryLabelColor = CupertinoColors.secondaryLabel.resolveFrom(context);
+    final tertiaryLabelColor = CupertinoColors.tertiaryLabel.resolveFrom(context);
+
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
@@ -31,14 +40,14 @@ class UploadDropzone extends StatelessWidget {
       },
       child: DottedBorder(
         borderRadius: BorderRadius.circular(12),
-        color: CupertinoColors.systemGrey3,
+        color: borderColor,
         strokeWidth: 1.5,
         dashPattern: const [6, 4],
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
           decoration: BoxDecoration(
-            color: CupertinoColors.systemGrey6.withOpacity(0.5),
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -48,19 +57,19 @@ class UploadDropzone extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey5,
+                  color: iconContainerColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   CupertinoIcons.cloud_upload,
                   size: 32,
-                  color: CupertinoColors.systemGrey,
+                  color: iconColor,
                 ),
               ),
               const SizedBox(height: 20),
               CupertinoButton(
                 padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                color: CupertinoColors.systemGrey5,
+                color: iconContainerColor,
                 borderRadius: BorderRadius.circular(10),
                 onPressed: () {
                   HapticFeedback.lightImpact();
@@ -72,13 +81,13 @@ class UploadDropzone extends StatelessWidget {
                     Icon(
                       CupertinoIcons.folder,
                       size: 18,
-                      color: CupertinoColors.label,
+                      color: labelColor,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Seleccionar archivo',
                       style: TextStyle(
-                        color: CupertinoColors.label,
+                        color: labelColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -90,7 +99,7 @@ class UploadDropzone extends StatelessWidget {
               Text(
                 'Máximo ${maxFileSizeMB}MB',
                 style: TextStyle(
-                  color: CupertinoColors.secondaryLabel,
+                  color: secondaryLabelColor,
                   fontSize: 13,
                 ),
               ),
@@ -98,7 +107,7 @@ class UploadDropzone extends StatelessWidget {
               Text(
                 allowedExtensions.map((e) => e.toUpperCase()).join(', '),
                 style: TextStyle(
-                  color: CupertinoColors.tertiaryLabel,
+                  color: tertiaryLabelColor,
                   fontSize: 13,
                 ),
               ),

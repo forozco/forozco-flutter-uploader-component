@@ -26,10 +26,16 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
 
   // ==================== iOS Native UI ====================
   Widget _buildIOSScreen() {
+    // Colores adaptativos para dark mode
+    final backgroundColor = CupertinoColors.systemGroupedBackground.resolveFrom(context);
+    final cardBackgroundColor = CupertinoColors.systemBackground.resolveFrom(context);
+    final labelColor = CupertinoColors.label.resolveFrom(context);
+    final secondaryFillColor = CupertinoColors.systemGrey5.resolveFrom(context);
+
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemGroupedBackground,
+      backgroundColor: backgroundColor,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: CupertinoColors.systemBlue,
+        backgroundColor: CupertinoColors.systemBlue.resolveFrom(context),
         border: null,
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -61,7 +67,7 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                     // Card con estilo iOS grouped
                     Container(
                       decoration: BoxDecoration(
-                        color: CupertinoColors.systemBackground,
+                        color: cardBackgroundColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: FileUploaderCard(
@@ -104,13 +110,13 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                       width: double.infinity,
                       height: 50,
                       child: CupertinoButton(
-                        color: CupertinoColors.systemGrey5,
+                        color: secondaryFillColor,
                         borderRadius: BorderRadius.circular(12),
                         onPressed: _handleCancela,
                         child: Text(
                           'Cancelar',
                           style: TextStyle(
-                            color: CupertinoColors.label,
+                            color: labelColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 17,
                           ),

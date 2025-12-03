@@ -109,6 +109,10 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
 
   // ==================== iOS Native UI ====================
   Widget _buildIOSCard(BuildContext context) {
+    // Colores adaptativos para dark mode
+    final labelColor = CupertinoColors.label.resolveFrom(context);
+    final secondaryLabelColor = CupertinoColors.secondaryLabel.resolveFrom(context);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -116,10 +120,10 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
         children: [
           Text(
             widget.title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: CupertinoColors.black,
+              color: labelColor,
               letterSpacing: -0.5,
             ),
           ),
@@ -129,7 +133,7 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
               widget.subtitle!,
               style: TextStyle(
                 fontSize: 15,
-                color: CupertinoColors.systemGrey,
+                color: secondaryLabelColor,
               ),
             ),
           ],
@@ -137,9 +141,9 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
             const SizedBox(height: 16),
             Text(
               widget.description!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
-                color: CupertinoColors.black,
+                color: labelColor,
               ),
             ),
           ],
@@ -150,10 +154,10 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
           const SizedBox(height: 24),
           Text(
             widget.uploadSectionTitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w600,
-              color: CupertinoColors.black,
+              color: labelColor,
             ),
           ),
           const SizedBox(height: 12),
@@ -178,6 +182,9 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
   }
 
   Widget _buildIOSBulletPoint(String text) {
+    final labelColor = CupertinoColors.label.resolveFrom(context);
+    final secondaryLabelColor = CupertinoColors.secondaryLabel.resolveFrom(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
@@ -188,16 +195,16 @@ class _FileUploaderCardState extends State<FileUploaderCard> {
             width: 5,
             height: 5,
             decoration: BoxDecoration(
-              color: CupertinoColors.systemGrey,
+              color: secondaryLabelColor,
               shape: BoxShape.circle,
             ),
           ),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
-                color: CupertinoColors.black,
+                color: labelColor,
                 fontWeight: FontWeight.w400,
               ),
             ),
