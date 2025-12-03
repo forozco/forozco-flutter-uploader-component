@@ -236,8 +236,13 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
                       child: FilledButton(
                         onPressed: _handleSiguiente,
                         style: FilledButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          foregroundColor: colorScheme.onPrimary,
+                          // En dark mode usar primaryContainer para mejor contraste
+                          backgroundColor: isDark
+                              ? colorScheme.primaryContainer
+                              : colorScheme.primary,
+                          foregroundColor: isDark
+                              ? colorScheme.onPrimaryContainer
+                              : colorScheme.onPrimary,
                         ),
                         child: const Text(
                           'Siguiente',
