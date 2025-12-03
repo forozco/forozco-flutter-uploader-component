@@ -52,9 +52,6 @@ class _AdjuntaArchivosScreenState extends State<AdjuntaArchivosScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
